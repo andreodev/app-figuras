@@ -1,75 +1,137 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Audio } from 'expo-av';
+import { useState } from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function Home() {
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
-export default function HomeScreen() {
+  const playSound = async (file: any) => {
+    try {
+      if (sound) {
+        await sound.unloadAsync();
+      }
+      const { sound: newSound } = await Audio.Sound.createAsync(file);
+      setSound(newSound);
+      await newSound.playAsync();
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível reproduzir o som.');
+    }
+  };
+
+  const resetSounds = async () => {
+    try {
+      if (sound) {
+        await sound.stopAsync();
+        await sound.unloadAsync();
+        setSound(null);
+      }
+      Alert.alert('Reiniciado', 'Os sons foram reiniciados!');
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível reiniciar os sons.');
+    }
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <View style={styles.container}>
+      {/* Quadrado */}
+      <TouchableOpacity
+        style={[styles.shape, styles.square]}
+        onPress={() => playSound(require('../../assets/square.mp3'))}
+      >
+        <Text style={styles.text}>Quadrado</Text>
+      </TouchableOpacity>
+
+      {/* Triângulo */}
+      <View style={styles.triangleContainer}>
+        <TouchableOpacity
+          style={styles.triangle}
+          onPress={() => playSound(require('../../assets/triangle.mp3'))}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <Text style={styles.text}>Triângulo</Text>
+      </View>
+
+      {/* Círculo */}
+      <TouchableOpacity
+        style={[styles.shape, styles.circle]}
+        onPress={() => playSound(require('../../assets/circle.mp3'))}
+      >
+        <Text style={styles.text}>Círculo</Text>
+      </TouchableOpacity>
+
+      {/* Botão Reiniciar */}
+      <TouchableOpacity style={styles.resetButton} onPress={resetSounds}>
+        <Text style={styles.resetButtonText}>Reiniciar</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    gap: 40,
+    backgroundColor: '#fff',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  shape: {
+    width: 120,
+    height: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
+    elevation: 5,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  square: {
+    backgroundColor: '#82c7ff', // azul claro
+  },
+  circle: {
+    backgroundColor: '#ff6b6b', // vermelho coral
+    borderRadius: 60,
+  },
+  triangleContainer: {
+    alignItems: 'center',
+  },
+  triangle: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 60,
+    borderRightWidth: 60,
+    borderBottomWidth: 100,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#8ee5a1', // verde menta
+  },
+  text: {
+    marginTop: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#444',
+    textShadowColor: 'rgba(255, 255, 255, 0.7)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+  },
+  resetButton: {
+    marginTop: 50,
+    backgroundColor: '#c9a3ff', // lilás suave
+    paddingVertical: 14,
+    paddingHorizontal: 50,
+    borderRadius: 30,
+    shadowColor: '#8e7cc3',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 7,
+    elevation: 6,
+  },
+  resetButtonText: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: 'bold',
   },
 });
