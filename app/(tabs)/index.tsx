@@ -33,6 +33,13 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
+      {/* Cabeçalho */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Andreo Henrique Ramos Leite</Text>
+        <Text style={styles.headerSubtitle}>RA: G04DIH6</Text>
+        <View style={styles.divider} />
+      </View>
+
       {/* Quadrado */}
       <TouchableOpacity
         style={[styles.shape, styles.square]}
@@ -73,6 +80,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 40,
     backgroundColor: '#fff',
+    paddingTop: 50,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#222',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 2,
+  },
+  divider: {
+    width: '80%',
+    height: 1,
+    backgroundColor: '#ccc',
+    marginTop: 10,
+    marginBottom: 20,
   },
   shape: {
     width: 120,
@@ -87,10 +116,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   square: {
-    backgroundColor: '#82c7ff', // azul claro
+    backgroundColor: '#82c7ff',
   },
   circle: {
-    backgroundColor: '#ff6b6b', // vermelho coral
+    backgroundColor: '#ff6b6b',
     borderRadius: 60,
   },
   triangleContainer: {
@@ -106,7 +135,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 100,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderBottomColor: '#8ee5a1', // verde menta
+    borderBottomColor: '#8ee5a1',
   },
   text: {
     marginTop: 10,
@@ -118,8 +147,8 @@ const styles = StyleSheet.create({
     textShadowRadius: 1,
   },
   resetButton: {
-    marginTop: 50,
-    backgroundColor: '#c9a3ff', // lilás suave
+    marginTop: 20,
+    backgroundColor: '#c9a3ff',
     paddingVertical: 14,
     paddingHorizontal: 50,
     borderRadius: 30,
